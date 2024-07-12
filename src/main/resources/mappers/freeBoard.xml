@@ -50,4 +50,31 @@
     ]]>
 	</delete>
 
+	<!-- 검색 기능 -->
+	<select id="selectSearch" resultType="scv.DevOpsunity.free_board.dto.FreeArticleDTO">
+		SELECT * FROM board_tbl
+		<where>
+			<if test="type == 'title'">
+				freeTitle LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="type == 'writer'">
+				id LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+		</where>
+		ORDER BY freeArticleNo DESC
+		LIMIT #{s}, #{e}
+	</select>
+
+	<select id="selectSearchCount" resultType="int">
+		SELECT COUNT(*) FROM board_tbl
+		<where>
+			<if test="type == 'title'">
+				freeTitle LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+			<if test="type == 'writer'">
+				id LIKE CONCAT('%', #{keyword}, '%')
+			</if>
+		</where>
+	</select>
+
 </mapper>

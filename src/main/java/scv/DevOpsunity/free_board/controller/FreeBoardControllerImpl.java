@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,16 +14,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import scv.DevOpsunity.free_board.dto.FreeArticleDTO;
+import scv.DevOpsunity.free_board.dto.SearchForm;
 import scv.DevOpsunity.free_board.service.FreeBoardService;
 import scv.DevOpsunity.member.dto.MemberDTO;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 
 @Controller("freeBoardController")
@@ -34,8 +31,8 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 	
 	@Autowired
 	private FreeArticleDTO articleDTO;
-	
-	
+
+
 	@Override
 	@GetMapping("/board/freeListArticles.do")
 	public ModelAndView listArticles(
@@ -53,17 +50,19 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 		ModelAndView mav=new ModelAndView();	
 		mav.setViewName("/free_board/freeListArticles");
 		mav.addObject("articleMap",articleMap);
+		mav.addObject("searchForm", new SearchForm());
+
 		return mav;
 	}
 
-	@Override
-	@GetMapping("/board/freeArticleForm.do")
-	public ModelAndView articleForm(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ModelAndView mav=new ModelAndView();
-		//한 개의 이미지 추가
-		mav.setViewName("/free_board/freeArticleForm");
-		return mav;
-	}
+		@Override
+		@GetMapping("/board/freeArticleForm.do")
+		public ModelAndView articleForm(HttpServletRequest request, HttpServletResponse response) throws Exception {
+			ModelAndView mav=new ModelAndView();
+
+			mav.setViewName("/free_board/freeArticleForm");
+			return mav;
+		}
 
 	// 글쓰기에 한 개의 이미지 추가
 	@Override
@@ -199,6 +198,39 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 			}			
 		}
 		return freeImageFileName;
+	}
+
+	@GetMapping("/board/freeReview.do")
+	public String review(Model model,
+						 @RequestParam(value="type", required=false) String type,
+						 @RequestParam(value="keyword", required=false) String keyword,
+						 @RequestParam(required = false, defaultValue = "1") int num) throws Exception {
+		Map<String, Object> articleMap = new HashMap<>();
+
+		if(type != null && keyword != null && !keyword.trim().isEmpty()) {
+			boardService.selectSearch(model, type, keyword, num);
+			List<FreeArticleDTO> articlesList = (List<FreeArticleDTO>) model.getAttribute("boardList");
+			articleMap.put("articlesList", articlesList);
+		} else {
+			boardService.boardList(model, num);
+			List<FreeArticleDTO> articlesList = (List<FreeArticleDTO>) model.getAttribute("boardList");
+			articleMap.put("articlesList", articlesList);
+		}
+
+		// 페이징 정보 추가
+		articleMap.put("section", 1); // 섹션 정보가 필요하다면 적절히 계산해서 넣어주세요
+		articleMap.put("pageNum", num);
+
+		int totArticles = (int) model.getAttribute("repeat") * 10; // 한 페이지당 10개 게시글로 가정
+		articleMap.put("totArticles", totArticles);
+
+		// articleMap을 모델에 추가
+		model.addAttribute("articleMap", articleMap);
+
+		// Add searchForm to the model
+		model.addAttribute("searchForm", new SearchForm());
+
+		return "/free_board/freeListArticles";
 	}//method 종료
 
 
