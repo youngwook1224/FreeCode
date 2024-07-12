@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import scv.DevOpsunity.comment.dto.CommentDTO;
+import scv.DevOpsunity.comment.service.CommentService;
 import scv.DevOpsunity.free_board.dto.FreeArticleDTO;
 import scv.DevOpsunity.free_board.dto.ImageDTO;
 import scv.DevOpsunity.free_board.service.FreeBoardService;
@@ -29,14 +31,17 @@ import java.util.*;
 @Controller("freeBoardController")
 public class FreeBoardControllerImpl implements FreeBoardController {
 	private static String ARTICLE_IMG_REPO="C:\\kimchangmin\\fileUpload";
-	
+
 	@Autowired
 	private FreeBoardService boardService;
-	
+
 	@Autowired
 	private FreeArticleDTO articleDTO;
-	
-	
+
+	//댓글전용 자동주입
+	@Autowired
+	private CommentService commentService;
+
 	@Override
 	@GetMapping("/board/freeListArticles.do")
 	public ModelAndView listArticles(
@@ -68,7 +73,7 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 		mav.setViewName("/free_board/freeArticleForm_multi");
 		return mav;
 	}
-	
+
 	//글쓰기에 여러 개의 이미지 추가
 	@Override
 	@PostMapping("/board/freeAddArticle.do")
@@ -110,7 +115,7 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 
 					Files.createDirectories(destDir);  // 대상 디렉토리가 없을 경우 생성
 					Files.move(srcFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
-				}		
+				}
 			}
 		}catch (Exception e) {
 			//글쓰기 수행 중 오류
@@ -120,7 +125,7 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 					File srcFile=new File(ARTICLE_IMG_REPO + "\\temp\\" + imageFileName);
 					//오류 발생 시 temp폴더의 이미지를 모두 삭제
 					srcFile.delete();
-				}		
+				}
 			}
 		}
 		ModelAndView mav= new ModelAndView("redirect:/board/freeListArticles.do");
@@ -136,6 +141,12 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 		ModelAndView mav=new ModelAndView();
 		mav.setViewName("/free_board/freeViewArticle_multi");
 		mav.addObject("articleMap",articleMap);
+
+		//댓글 보기
+		List<CommentDTO> commentList = commentService.readReply(articleDTO.getArticleNo());
+		model.addAttribute("commentList",commentList);	// 임플리먼츠 매개변수에 Model model 추가해야함
+
+
 		return mav;
 	}
 
@@ -168,7 +179,7 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 				imageFileList.add(imageDTO);
 			}
 			articleMap.put("imageFileList", imageFileList);
-		}		
+		}
 		HttpSession session = multipartRequest.getSession();
 		MemberDTO memberDTO = (MemberDTO)session.getAttribute("member");
 		String id = memberDTO.getId();
@@ -193,8 +204,8 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 						File oldFile=new File(ARTICLE_IMG_REPO + "\\" + articleNo + "\\" + originalFileName);
 						oldFile.delete();
 					}
-					
-				}		
+
+				}
 			}
 		}catch (Exception e) {
 			//글쓰기 수행 중 오류
@@ -204,14 +215,14 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 					File srcFile=new File(ARTICLE_IMG_REPO + "\\temp\\" + imageFileName);
 					//오류 발생 시 temp폴더의 이미지를 모두 삭제
 					srcFile.delete();
-				}				
+				}
 			}*/
 			e.printStackTrace();
 		}
 		ModelAndView mav= new ModelAndView("redirect:/board/freeListArticles.do");
 		return mav;
 	}
-	
+
 	@Override
 	@PostMapping("/board/freeRemoveArticle.do")
 	public ModelAndView removeArticle(@RequestParam("articleNo") int articleNo, HttpServletRequest request, HttpServletResponse response)
@@ -224,7 +235,7 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 		ModelAndView mav= new ModelAndView("redirect:/board/freeListArticles.do");
 		return mav;
 	}
-	
+
 	//한 개 이미지 파일 업로드
 	private String fileUpload(MultipartHttpServletRequest multipartRequest) throws Exception {
 		String imageFileName=null;
@@ -241,11 +252,11 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 					}
 				}
 				mFile.transferTo(new File(ARTICLE_IMG_REPO + "\\temp\\" + imageFileName));
-			}			
+			}
 		}
 		return imageFileName;
 	}
-	
+
 	//여러개의 이미지 파일 업로드
 	private List<String> multiFileUpload(MultipartHttpServletRequest multipartRequest) throws Exception {
 		List<String> fileList=new ArrayList<String>();
@@ -263,8 +274,27 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 					}
 				}
 				mFile.transferTo(new File(ARTICLE_IMG_REPO + "\\temp\\" + originalFileName));
-			}			
+			}
 		}
 		return fileList;
-	}//method 종료
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
+
+
