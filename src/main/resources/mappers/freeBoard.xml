@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="scv.DevOpsunity.free_board.dao.FreeBoardDAO">
+
+ 	<resultMap type="FreeArticleDTO" id="articleResult">
+ 		<result property="articleNo" column="articleNo"/>
+ 		<result property="title" column="title"/>
+ 		<result property="content" column="content"/>
+ 		<result property="reply" column="reply"/>
+ 		<result property="id" column="id"/>
+ 	</resultMap>
+
+ 	<resultMap type="ImageDTO" id="imgResult">
+ 		<result property="imageFileNo" column="imageFileNo"/>
+ 		<result property="imageFileName" column="imageFileName"/>
+ 		<result property="regDate" column="regDate"/>
+ 		<result property="articleNo" column="articleNo"/>
+ 	</resultMap>
+
+ 	<select id="selectAllArticles" resultMap="articleResult" parameterType="int">
+ 		select articleNo, title, id from board_tbl order by articleNo desc LIMIT #{count},10
+ 	</select>
+
+ 	<select id="selectToArticles" resultType="int">
+ 		<![CDATA[
+ 			select count(*) from board_tbl
+ 		]]>
+ 	</select>
+
+ 	<select id="getNewArticleNo" resultType="int">
+ 		<![CDATA[
+ 			select max(articleNo)+1 from board_tbl
+ 		]]>
+ 	</select>
+
+	<insert id="insertNewArticle" parameterType="java.util.Map">
+		<![CDATA[
+			insert into board_tbl(articleNo, title, content, id) values(#{articleNo}, #{title}, #{content}, #{id})
+		]]>
+	</insert>
+
+ 	<select id="selectArticle" resultType="FreeArticleDTO" parameterType="int">
+ 		<![CDATA[
+ 			select * from board_tbl where articleNo=#{articleNo}
+ 		]]>
+ 	</select>
+
+ 	<select id="selectImageFileList" resultMap="imgResult" parameterType="int">
+ 		select * from imagefile_tbl where articleNo=#{articleNo}
+ 	</select>
+
+	<insert id="insertNewImages" parameterType="java.util.Map">
+		insert into imagefile_tbl values
+		<foreach collection="imageFileList" item="item" separator=",">
+			(#{item.imageFileNo}, #{item.imageFileName}, now(), #{articleNo})
+		</foreach>
+	</insert>
+
+	<!-- 이미지 여러 개 글 수정하기 -->
+	<update id="updateArticle" parameterType="java.util.Map">
+		update board_tbl set title=#{title}, content=#{content} where articleNo=#{articleNo}
+	</update>
+
+	<update id="updateImage"  parameterType="java.util.Map">
+		<foreach item="item" collection="imageFileList" separator=";">
+		    update imagefile_tbl set imageFileName=#{item.imageFileName} where imageFileNo=#{item.imageFileNo} and #{item.imageFileName} != ''
+		</foreach>
+	</update>
+	<delete id="deleteArticle" parameterType="int">
+		<![CDATA[
+ 			delete from board_tbl where articleNo=#{articleNo}
+ 		]]>
+	</delete>
+
+ </mapper>
+
