@@ -2,128 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  layout:decorate="/layout/layout">
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 <head>
 <meta charset="UTF-8">
 <title>메인페이지</title>
-	<style>
-		body {
-			background-color: #212529;
-			color: #f8f9fa;
-		}
-		.card {
-			background-color: #343a40;
-		}
-		.card-title, .card-text {
-			color: #f8f9fa;
-		}
-		.blockquote {
-			color: #f8f9fa;
-		}
-		header {
-			padding: 1rem 0;
-		}
-		nav {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
-		nav a {
-			color: #f8f9fa;
-			margin-right: 1rem;
-		}
-		.nav-right {
-			display: flex;
-			align-items: center;
-		}
-		.nav-right input[type="search"] {
-			margin-right: 1rem;
-			padding: 0.5rem;
-		}
-		.sign-up {
-			background-color: #007bff;
-			color: #f8f9fa;
-			border: none;
-			padding: 0.5rem 1rem;
-			cursor: pointer;
-		}
-		.menu {
-			display: flex;
-			flex-wrap: wrap;
-			margin: 1rem 0;
-		}
-		.menu a {
-			color: #f8f9fa;
-			margin-right: 1rem;
-			padding: 0.5rem 0;
-		}
-		.menu li{
-			list-style-type: none;
-			display: inline-block;
-		}
-		.featured-post {
-			margin-bottom: 2rem;
-		}
-		.post-previews {
-			display: flex;
-			justify-content: space-between;
-		}
-		.post-preview {
-			background-color: #343a40;
-			padding: 1rem;
-			margin-right: 1rem;
-			flex: 1;
-		}
-	</style>
-
 </head>
 <body>
 	<th:block layout:fragment="content">
-		<main class="row">
-			<section class="featured-post">
-				<h1>Title of a longer featured blog post</h1>
-				<p>Multiple lines of text that form the lede, informing new readers quickly and efficiently about what’s most interesting in this post’s contents.</p>
-				<p><a href="#">Continue reading...</a></p>
-			</section>
-			<section class="post-previews row mb-2">
-				<div class="col-md-6 post-preview">
-					<h2>World</h2>
-					<h3>Featured post</h3>
-					<p>Nov 12</p>
-					<p>This is a wider card with supporting text below as a natural lead-in to additional content.</p>
-					<a href="#">Continue reading...</a>
-				</div>
-				<div class="col-md-6 post-preview">
-					<h2>Design</h2>
-					<h3>Post title</h3>
-					<p>Nov 11</p>
-					<p>This is a wider card with supporting text below as a natural lead-in to additional content.</p>
-					<a href="#">Continue reading...</a>
-				</div>
-			</section>
-
-
-			<div class="row">
-				<div class="col-md-8 blog-main">
-					<h3 class="pb-4 mb-4 font-italic border-bottom">
-						From the Firehose
-					</h3>
-					<div class="blog-post">
-						<h2 class="blog-post-title">Sample blog post</h2>
-						<p class="blog-post-meta">January 1, 2021 by <a href="#" class="text-primary">Mark</a></p>
-						<p>This blog post shows a few different types of content that's supported and styled with Bootstrap. Basic typography, lists, tables, images, code, and more are all supported as expected.</p>
-						<p>This is some additional paragraph placeholder content. It has been written to fill the available space and show how a longer snippet of text affects the surrounding content. We'll repeat it often to keep the demonstration flowing, so be on the lookout for this exact same string of text.</p>
-						<blockquote class="blockquote">
-							<p class="mb-0">Quoted text goes here.</p>
-						</blockquote>
-					</div>
-				</div>
-			</div>
-		</main>
+	     <h2>메인페이지 입니다!</h2>
 	</th:block>
 </body> 
 </html>

@@ -8,7 +8,6 @@ import scv.DevOpsunity.member.dto.MemberDTO;
 
 import java.util.List;
 
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service("memberService")
 public class MemberServiceImpl implements MemberService {
    

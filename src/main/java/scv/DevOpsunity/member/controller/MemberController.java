@@ -12,8 +12,7 @@ public interface MemberController {
 	public ModelAndView listMembers(HttpServletRequest request,
 									HttpServletResponse response) throws Exception;
 
-	public ModelAndView addMember(@ModelAttribute("memberDTO") MemberDTO memberDTO,
-								  HttpServletRequest request, HttpServletResponse response) throws Exception;
+	public ModelAndView addMember(@ModelAttribute("memberDTO") MemberDTO memberDTO, HttpServletRequest request, HttpServletResponse response) throws Exception;
 
 	public ModelAndView memberForm(HttpServletRequest request,
 								   HttpServletResponse response) throws Exception;

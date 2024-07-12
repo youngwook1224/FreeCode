@@ -7,6 +7,8 @@ import org.springframework.web.servlet.ModelAndView;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
+
 public interface FreeBoardController {
 
 	public ModelAndView listArticles(
@@ -19,10 +21,10 @@ public interface FreeBoardController {
 	
 	public ModelAndView addArticle(MultipartHttpServletRequest multipartRequest , HttpServletResponse response) throws Exception;	// 이미지 등 파일 업로드는은 멀티 파트 처리가 되야 함
 	
-	public ModelAndView viewArticle(@RequestParam("articleNo") int articleNo, HttpServletRequest request , HttpServletResponse response) throws Exception;
+	public ModelAndView viewArticle(@RequestParam("freeArticleNo") int freeArticleNo, HttpServletRequest request , HttpServletResponse response) throws Exception;
 	
 	public ModelAndView modArticle(MultipartHttpServletRequest multipartRequest , HttpServletResponse response) throws Exception;
 	
-	public ModelAndView removeArticle(@RequestParam("articleNo") int articleNo, HttpServletRequest request , HttpServletResponse response) throws Exception;
-	
+	public ModelAndView removeArticle(@RequestParam("freeArticleNo") int freeArticleNo, HttpServletRequest request , HttpServletResponse response) throws Exception;
+
 }

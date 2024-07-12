@@ -33,7 +33,7 @@
                 alert("이름을 입력해주세요");
                 frmMember.name.focus();
             } else if (phoneNum.length == 0 || phoneNum.trim() == "") {
-                alert("핸드폰 번호를 입력해주세요");
+                alert("핸드폰 번호를 숫자만 입력해주세요");
                 frmMember.phoneNum.focus();
             } else if (email.length == 0 || email.trim() == "") {
                 alert("이메일을 입력해주세요");
@@ -96,7 +96,7 @@
 		</tr>
 		<tr>
 			<td>전화번호</td>
-			<td><input type="text" name="phoneNum"></td>
+			<td><input type="number" name="phoneNum" placeholder="숫자만 입력하세요"></td>
 		</tr>
 		<tr>
 			<td>이메일</td>
