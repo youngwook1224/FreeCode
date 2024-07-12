@@ -1,6 +1,7 @@
 package scv.DevOpsunity.free_board.service;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.ui.Model;
 import scv.DevOpsunity.free_board.dto.FreeArticleDTO;
 
 import java.util.Map;
@@ -18,5 +19,8 @@ public interface FreeBoardService {
 	public void modArticle(FreeArticleDTO freeArticleDTO) throws DataAccessException;
 	
 	public void removeArticle(int articleNo) throws DataAccessException;
-	
+
+	// 검색 기능
+	void selectSearch(Model model, String type, String keyword, int num) throws Exception;
+	void boardList(Model model, int num) throws Exception;
 }
