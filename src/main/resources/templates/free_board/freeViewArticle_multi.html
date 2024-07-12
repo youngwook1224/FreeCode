@@ -36,7 +36,7 @@
 		if(imgName != null) {
 			for(let i=0; i<imgName.length; i++) {
 				imgName[i].disabled=false;
-			}			
+			}
 		}
 	}
 	//수정 반영하기
@@ -74,7 +74,7 @@
 </head>
 <body>
 	<th:block layout:fragment="content">
-	<form name="frmArticle" action="" method="post" enctype="multipart/form-data">
+	<form name="frmArticle" action="/board/freeModArticle.do" method="post" enctype="multipart/form-data">
 		<table align="center">
 			<tr>
 				<td width="150" align="center" bgcolor="#ff9933">글번호</td>

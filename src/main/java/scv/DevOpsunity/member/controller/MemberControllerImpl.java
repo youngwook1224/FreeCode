@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -35,11 +36,11 @@ public class MemberControllerImpl implements MemberController{
 	   @PostMapping("/member/addMember.do")
 	   public ModelAndView addMember(@ModelAttribute("memberDTO") MemberDTO memberDTO,
 									 HttpServletRequest request, HttpServletResponse response)
-	         throws Exception {
-	      request.setCharacterEncoding("utf-8");
-	      memberService.addMember(memberDTO);
-	      ModelAndView mav=new ModelAndView("redirect:/main.do");
-	      return mav;
+			 throws Exception {
+		  request.setCharacterEncoding("utf-8");
+		  memberService.addMember(memberDTO);
+		  ModelAndView mav=new ModelAndView("redirect:/member/listMembers.do");
+		  return mav;
 	   }
 
 
@@ -79,8 +80,7 @@ public class MemberControllerImpl implements MemberController{
 	          ModelAndView mav=new ModelAndView("redirect:/member/listMembers.do");
 	      return mav;
 	   }
-
-	   /* 쓸데 없음
+	   
 	   @Override
 	   @GetMapping("/member/loginForm.do")
 	   public ModelAndView loginForm(@ModelAttribute("member") MemberDTO member,
@@ -89,52 +89,49 @@ public class MemberControllerImpl implements MemberController{
 			   HttpServletRequest request, HttpServletResponse response) throws Exception{
 		   HttpSession session = request.getSession();	//  getSession() : 세션이 있다면 가져오고 없다면 생성
 		   session.setAttribute("action", action);
+		   // Referer 헤더 저장
+		   String referer = request.getHeader("Referer");
+		   if (referer != null && !referer.contains("/member/loginForm.do")) {
+			   session.setAttribute("prevPage", referer);
+		   }
+
 		   ModelAndView mav = new ModelAndView();
 		   mav.addObject("result", result);
 		   mav.setViewName("/member/loginForm");
 		   return mav;
 	   }
-	    */
-
-	@Override
-	@GetMapping("/member/loginForm.do")
-	public ModelAndView loginForm(@ModelAttribute("member") MemberDTO member,
-								  @RequestParam(value = "action", required = false) String action,
-								  @RequestParam(value = "result", required = false) String result,
-								  HttpServletRequest request, HttpServletResponse response) throws Exception {
-		HttpSession session = request.getSession(); // getSession() : 세션이 있다면 가져오고 없다면 생성
-		session.setAttribute("action", action);
-		// 사용자 아이디를 세션에 저장 (예: 로그인 처리 후 사용자 정보 세팅)
-		ModelAndView mav = new ModelAndView();
-		mav.addObject("result", result);
-		mav.setViewName("/member/loginForm");
-		return mav;
-	}
 
 	@Override
 	@PostMapping("/member/login.do")
 	public ModelAndView login(@ModelAttribute("member") MemberDTO member, RedirectAttributes rAttr, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+							  HttpServletResponse response) throws Exception {
 		memberDTO = memberService.login(member);
 		ModelAndView mav = new ModelAndView();
 		if(memberDTO != null) {
 			HttpSession session = request.getSession();
 			session.setAttribute("member", memberDTO);
 			session.setAttribute("isLogOn", true);
-			session.setAttribute("userId", memberDTO.getId());
 			String action = (String)session.getAttribute("action");
+			// 추가된 부분: 이전 페이지 URL을 세션에서 가져옴
+			String prevPage = (String)session.getAttribute("prevPage");
+
 			if(action != null) {
 				mav.setViewName("redirect:" + action);
-			}else {
+				// 추가된 부분: 이전 페이지 URL이 존재하면 그 페이지로 리다이렉트하고 세션에서 제거
+			} else if (prevPage != null) {
+				mav.setViewName("redirect:" + prevPage);
+				session.removeAttribute("prevPage");
+			} else {
 				mav.setViewName("redirect:/main.do");
 			}
-		}else {
+		} else {
 			rAttr.addAttribute("result","아이디나 비밀번호가 틀립니다. 다시 로그인해 주세요");
 			mav.setViewName("redirect:/member/loginForm.do");
 		}
 		return mav;
 	}
-	
+
+
 	@Override
 	@GetMapping("/member/logout.do")
 	public ModelAndView logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -154,5 +151,5 @@ public class MemberControllerImpl implements MemberController{
 		int cnt = memberService.idCheck(id);
 		return cnt;
 	}
-	
+
 }
