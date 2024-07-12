@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>회원정보 출력창</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+        let idDupl = 'N';
+
+        function fn_validateSendMember() {
+            let frmMember = document.forms['frmMember'];
+            let id = frmMember.id.value;
+            let pw = frmMember.pw.value;
+            let pwCheck = frmMember.pwCheck.value;
+            let name = frmMember.name.value;
+            let phoneNum = frmMember.phoneNum.value;
+            let email = frmMember.email.value;
+
+            if (id.length == 0 || id.trim() == "") {
+                alert("아이디를 입력해주세요");
+                frmMember.id.focus();
+            } else if (pw.length == 0 || pw.trim() == "") {
+                alert("비밀번호를 입력해주세요");
+                frmMember.pw.focus();
+            } else if (pwCheck.length == 0 || pwCheck.trim() == "") {
+                alert("비밀번호 확인을 입력해주세요");
+                frmMember.pwCheck.focus();
+            } else if (pwCheck != pw) {
+                alert("비밀번호와 비밀번호 확인이 같지 않습니다");
+                frmMember.pw.focus();
+            } else if (name.length == 0 || name.trim() == "") {
+                alert("이름을 입력해주세요");
+                frmMember.name.focus();
+            } else if (phoneNum.length == 0 || phoneNum.trim() == "") {
+                alert("핸드폰 번호를 숫자만 입력해주세요");
+                frmMember.phoneNum.focus();
+            } else if (email.length == 0 || email.trim() == "") {
+                alert("이메일을 입력해주세요");
+                frmMember.email.focus();
+            } else if (idDupl == "N") {
+                alert("아이디 중복확인을 해주세요");
+            } else {
+                frmMember.method = "post";
+                frmMember.action = "/member/addMember.do";
+                frmMember.submit();
+            }
+        }
+
+        function idCheck() {
+            let id = $('#id').val();
+            $.ajax({
+                url: "/member/idCheck.do",
+                type: "post",
+                data: {id: id},
+                success: function(cnt) {
+                    if (cnt == 0) {
+                        alert("사용할 수 있는 아이디 입니다");
+                        idDupl = "Y";
+                    } else {
+                        alert("중복 된 아이디 입니다. 다른 아이디를 입력 해주세요");
+                        $('#id').val('');
+                    }
+                },
+                error: function() {
+                    alert("에러입니다");
+                }
+            });
+        }
+        /*]]>*/
+	</script>
+</head>
+<body>
+<form name="frmMember" th:action="@{/member/addMember.do}" method="post">
+	<table>
+		<tr>
+			<th>회원가입창</th>
+		</tr>
+		<tr>
+			<td>아이디</td>
+			<td><input type="text" id="id" name="id">
+				<input type="button" value="아이디 중복확인" onclick="idCheck()">
+			</td>
+		</tr>
+		<tr>
+			<td>비밀번호</td>
+			<td><input type="password" name="pw"></td>
+		</tr>
+		<tr>
+			<td>비밀번호 확인</td>
+			<td><input type="password" name="pwCheck"></td>
+		</tr>
+		<tr>
+			<td>이름</td>
+			<td><input type="text" name="name"></td>
+		</tr>
+		<tr>
+			<td>전화번호</td>
+			<td><input type="number" name="phoneNum" placeholder="숫자만 입력하세요"></td>
+		</tr>
+		<tr>
+			<td>이메일</td>
+			<td><input type="text" name="email"></td>
+		</tr>
+	</table>
+	<input type="button" value="회원가입" onclick="fn_validateSendMember();">
+</form>
+</body>
+</html>

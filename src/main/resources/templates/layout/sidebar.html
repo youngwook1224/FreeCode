@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<ul id="sidebar_left" th:fragment="sidebar">
+	<li><a th:href="@{/board/freeListArticles.do}">자유게시판</a></li>
+	<li>상품관리</li>
+	<li>커뮤니티</li>
+	<li th:if="${session.member != null and session.member.id == 'ADMIN'}">
+		<a th:href="@{/admin.do}">관리자 페이지</a>
+		<a th:href="@{/member/listMembers.do}">회원관리</a>
+	</li>
+</ul>
+</html>
