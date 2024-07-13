@@ -8,7 +8,5 @@
 	<mappers>
 		<mapper resource="mappers/freeBoard.xml" />
 		<mapper resource="mappers/member.xml" />
-		<mapper resource="mappers/codBoard.xml" />
-		<mapper resource="mappers/reply.xml" />
 	</mappers>
 </configuration>

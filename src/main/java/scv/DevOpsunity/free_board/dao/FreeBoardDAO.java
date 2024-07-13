@@ -29,8 +29,7 @@ public interface FreeBoardDAO {
 
 	public void deleteArticle(int freeArticleNo) throws DataAccessException;
 
-	public ArrayList<FreeArticleDTO> selectSearch(@Param("type")String type, @Param("keyword")String keyword, @Param("s") int start, @Param("e") int end)throws Exception;
+	public ArrayList<FreeArticleDTO> selectSearch(@Param("type") String type, @Param("keyword") String keyword, @Param("s") int start, @Param("e") int end) throws Exception;
 
-	public int selectSearchCount(@Param("type")String type,@Param("keyword")String keyword);
-	
+	public int selectSearchCount(@Param("type") String type, @Param("keyword") String keyword);
 }

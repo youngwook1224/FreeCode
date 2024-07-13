@@ -20,4 +20,6 @@ public interface MemberService {
 	public MemberDTO login(MemberDTO memberDTO) throws DataAccessException;
 
 	public int idCheck(String id);
+
+
 }

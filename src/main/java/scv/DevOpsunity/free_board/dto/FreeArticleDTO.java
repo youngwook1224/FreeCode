@@ -24,7 +24,6 @@ public class FreeArticleDTO {
 		this.id = id;
 		this.freeWriteDate = freeWriteDate;
 		this.freeImageFileName = freeImageFileName;
-
 	}
 
 	// getter, setter 메서드

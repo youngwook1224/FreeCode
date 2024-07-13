@@ -33,15 +33,15 @@ public class MemberControllerImpl implements MemberController{
 	}
 
 	@Override
-	   @PostMapping("/member/addMember.do")
-	   public ModelAndView addMember(@ModelAttribute("memberDTO") MemberDTO memberDTO,
-									 HttpServletRequest request, HttpServletResponse response)
-			 throws Exception {
-		  request.setCharacterEncoding("utf-8");
-		  memberService.addMember(memberDTO);
-		  ModelAndView mav=new ModelAndView("redirect:/member/listMembers.do");
-		  return mav;
-	   }
+	@PostMapping("/member/addMember.do")
+	public ModelAndView addMember(@ModelAttribute("memberDTO") MemberDTO memberDTO,
+								  HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		request.setCharacterEncoding("utf-8");
+		memberService.addMember(memberDTO);
+		ModelAndView mav=new ModelAndView("redirect:/main.do");
+		return mav;
+	}
 
 
 	@Override

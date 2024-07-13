@@ -49,32 +49,37 @@
     delete from board_tbl where freeArticleNo=#{freeArticleNo}
     ]]>
 	</delete>
-
-	<!-- 검색 기능 -->
+	<!-- selectSearch 쿼리: 검색 결과를 가져오는 쿼리 -->
 	<select id="selectSearch" resultType="scv.DevOpsunity.free_board.dto.FreeArticleDTO">
 		SELECT * FROM board_tbl
 		<where>
+			<!-- type이 'title'일 때 -->
 			<if test="type == 'title'">
 				freeTitle LIKE CONCAT('%', #{keyword}, '%')
 			</if>
+			<!-- type이 'writer'일 때 -->
 			<if test="type == 'writer'">
 				id LIKE CONCAT('%', #{keyword}, '%')
 			</if>
 		</where>
-		ORDER BY freeArticleNo DESC
-		LIMIT #{s}, #{e}
+		ORDER BY freeArticleNo DESC <!-- freeArticleNo 기준 내림차순 정렬 -->
+		LIMIT #{s}, #{e} <!-- s부터 e까지의 결과를 제한 -->
 	</select>
 
+	<!-- selectSearchCount 쿼리: 검색 결과의 총 개수를 가져오는 쿼리 -->
 	<select id="selectSearchCount" resultType="int">
 		SELECT COUNT(*) FROM board_tbl
 		<where>
+			<!-- type이 'title'일 때 -->
 			<if test="type == 'title'">
 				freeTitle LIKE CONCAT('%', #{keyword}, '%')
 			</if>
+			<!-- type이 'writer'일 때 -->
 			<if test="type == 'writer'">
 				id LIKE CONCAT('%', #{keyword}, '%')
 			</if>
 		</where>
 	</select>
+
 
 </mapper>
