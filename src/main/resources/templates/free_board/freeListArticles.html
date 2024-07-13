@@ -25,12 +25,12 @@
 	}
 </style>
 <script>
-	function fn_free_articleForm(isLogOn, articleForm, loginForm){
+	function fn_free_articleForm(isLogOn, freeArticleForm, freeLoginForm){
 		if(isLogOn == true){
 			location.href = freeArticleForm;
 		}else{
 			alert("로그인 후 글쓰기가 가능합니다.");
-			location.href=loginForm + '?action=/board/freeArticleForm.do';
+			location.href=freeLoginForm+ '?action=/board/freeArticleForm.do';
 		}
 	}
 	
@@ -40,15 +40,25 @@
 	<th:block layout:fragment="content">
 
 		<h2 align="center">글 목록창</h2>
+		<!-- 검색 기능 -->
+		<form action="#" th:action="@{/board/freeReview.do}" th:object="${searchForm}" method="get">
+			<select th:field="*{type}">
+				<option value="title">제목</option>
+				<option value="writer">작성자</option>
+			</select>
+			<input type="text" th:field="*{keyword}" placeholder="검색어 입력" />
+			<button type="submit">검색하기</button>
+		</form>
+
 		<table border="1" align="center" width="80%">
 			<tr align="center" bgcolor="lightgreen">
 				<th>글번호</th><th>작성자</th><th>제목</th><th>작성일</th>
 			</tr>
 			<tr align="center" th:each="article : ${articleMap.articlesList}">
-				<td width="10%" th:text=${article.articleNo}></td>
+				<td width="10%" th:text=${article.freeArticleNo}></td>
 				<td width="20%" th:text=${article.id}></td>
-				<td align="left" width="50%"><a th:href="@{/board/freeViewArticle.do(articleNo=${article.articleNo})}" th:text=${article.title}></a></td>
-				<td width="20%" th:text=${article.writeDate}></td>
+				<td align="left" width="50%"><a th:href="@{/board/freeViewArticle.do(freeArticleNo=${article.freeArticleNo})}" th:text=${article.freeTitle}></a></td>
+				<td width="20%" th:text=${article.freeWriteDate}></td>
 			</tr>
 		</table>
 		<div align="center" th:if="${articleMap.totArticles > 10}">

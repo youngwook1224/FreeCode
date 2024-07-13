@@ -6,47 +6,58 @@ import org.springframework.stereotype.Component;
 
 @Component("freeArticleDTO")
 public class FreeArticleDTO {
-	// mySql 컬럼 순서대로 해야 자동으로 편하게 쓰는 기능이 많다.
-	private int articleNo;			// 글 번호
-	private String title;			// 글 제목
-	private String content;		// 작성 일자
-	private String reply;
-	private String id;				// 회원 아이디
-	
+	private int freeArticleNo;       // 글 번호
+	private String freeTitle;        // 글 제목
+	private String freeContent;       // 작성 일자
+	private Date freeWriteDate;
+	private String id;          // 회원 아이디
+	private String freeImageFileName;
+
 	// 생성자
 	public FreeArticleDTO() { //빈 생성자
-		
+
 	}
-	public FreeArticleDTO(int articleNo, String title, String content, String imageFileName, Date writeDate, String id) {
-		this.articleNo = articleNo;
-		this.title = title;
-		this.content = content;
+	public FreeArticleDTO(int freeArticleNo, String freeTitle, String freeContent, String freeImageFileName, Date freeWriteDate, String id) {
+		this.freeArticleNo = freeArticleNo;
+		this.freeTitle = freeTitle;
+		this.freeContent = freeContent;
 		this.id = id;
+		this.freeWriteDate = freeWriteDate;
+		this.freeImageFileName = freeImageFileName;
+
 	}
 
-	// getter, setter (위에서 변수가 private 접근제한자니까 getter, setter 이용)
-	public int getArticleNo() {
-		return articleNo;
+	// getter, setter 메서드
+	public int getFreeArticleNo() {
+		return freeArticleNo;
 	}
 
-	public void setArticleNo(int articleNo) {
-		this.articleNo = articleNo;
+	public void setFreeArticleNo(int freeArticleNo) {
+		this.freeArticleNo = freeArticleNo;
 	}
 
-	public String getTitle() {
-		return title;
+	public String getFreeTitle() {
+		return freeTitle;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setFreeTitle(String freeTitle) {
+		this.freeTitle = freeTitle;
 	}
 
-	public String getContent() {
-		return content;
+	public String getFreeContent() {
+		return freeContent;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setFreeContent(String freeContent) {
+		this.freeContent = freeContent;
+	}
+
+	public Date getFreeWriteDate() {
+		return freeWriteDate;
+	}
+
+	public void setFreeWriteDate(Date freeWriteDate) {
+		this.freeWriteDate = freeWriteDate;
 	}
 
 	public String getId() {
@@ -57,13 +68,11 @@ public class FreeArticleDTO {
 		this.id = id;
 	}
 
-
-	public String getReply() {
-		return reply;
+	public String getFreeImageFileName() {
+		return freeImageFileName;
 	}
 
-	public void setReply(String reply) {
-		this.reply = reply;
+	public void setFreeImageFileName(String freeImageFileName) {
+		this.freeImageFileName = freeImageFileName;
 	}
 }
-

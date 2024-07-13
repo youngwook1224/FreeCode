@@ -3,15 +3,14 @@ package scv.DevOpsunity.free_board.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import scv.DevOpsunity.free_board.dao.FreeBoardDAO;
 import scv.DevOpsunity.free_board.dto.FreeArticleDTO;
-import scv.DevOpsunity.free_board.dto.ImageDTO;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service("freeBoardService")
 public class FreeBoardServiceImpl implements FreeBoardService {
 	
@@ -27,45 +26,72 @@ public class FreeBoardServiceImpl implements FreeBoardService {
 		List<FreeArticleDTO> articlesList = freeBoardDAO.selectAllArticles(count);
 		int totArticles = freeBoardDAO.selectToArticles();
 		articleMap.put("articlesList", articlesList);
-		//articleMap.put("totArticles", totArticles);
-		articleMap.put("totArticles", 324);
+		articleMap.put("totArticles", totArticles);
 		return articleMap;
 	}
-	
-	//여러개의 이미지 추가
+
+	//한개의 이미지 추가
 	@Override
-	public int addArticle(Map articleMap) throws DataAccessException {
-		int articleNo = freeBoardDAO.getNewArticleNo();
-		articleMap.put("articleNo",articleNo);
-		freeBoardDAO.insertNewArticle(articleMap);
-		if(articleMap.get("imageFileList") != null) {
-			freeBoardDAO.insertNewImages(articleMap);
+	public int addArticle(FreeArticleDTO freeArticleDTO) throws DataAccessException {
+		int freeArticleNo = freeBoardDAO.getNewArticleNo();
+		freeArticleDTO.setFreeArticleNo(freeArticleNo);
+		freeBoardDAO.insertNewArticle(freeArticleDTO);
+		return freeArticleNo;
+	}
+
+	@Override
+	public FreeArticleDTO viewArticle(int freeArticleNo) throws DataAccessException {
+		FreeArticleDTO freeArticleDTO = freeBoardDAO.selectArticle(freeArticleNo);
+		return freeArticleDTO;
+	}
+	
+
+	@Override
+	public void modArticle(FreeArticleDTO freeArticleDTO) throws DataAccessException {
+		freeBoardDAO.updateArticle(freeArticleDTO);
+		
+	}
+
+	@Override
+	public void removeArticle(int freeArticleNo) throws DataAccessException {
+		freeBoardDAO.deleteArticle(freeArticleNo);
+		
+	}
+
+	public void selectSearch(Model model, String type, String keyword, int num)throws Exception{
+		int pageLetter = 5;
+		int allCount;
+        allCount = freeBoardDAO.selectSearchCount(type,keyword);
+        int repeat = allCount / pageLetter;
+		if(allCount % pageLetter != 0) {
+			repeat += 1;
 		}
-		return articleNo;
-	}
-	
-		//여러개 이미지 상세 글보기
-	@Override
-	public Map viewArticle(int articleNo) throws DataAccessException {
-		Map articleMap = new HashMap();
-		FreeArticleDTO articleDTO = freeBoardDAO.selectArticle(articleNo);
-		List<ImageDTO> imageFileList = freeBoardDAO.selectImageFileList(articleNo);
-		articleMap.put("article", articleDTO);
-		articleMap.put("imageFileList", imageFileList);
-		return articleMap;
+
+		//시작,끝번호
+		int end = num * pageLetter;
+		int start = end + 1 - pageLetter;
+
+		model.addAttribute("repeat", repeat);
+		model.addAttribute("boardList", freeBoardDAO.selectSearch(type,keyword, start, end));
 	}
 
 	@Override
-	public void modArticle(Map articleMap) throws DataAccessException {
-		freeBoardDAO.updateArticle(articleMap);
-		freeBoardDAO.updateImage(articleMap);
-		
-	}
+	public void boardList(Model model, int num) throws Exception {
+		int pageLetter = 10; // 페이지당 게시글 수
+		int allCount = freeBoardDAO.selectToArticles(); // 전체 게시글 수
+		int repeat = allCount / pageLetter;
+		if(allCount % pageLetter != 0) {
+			repeat += 1;
+		}
 
-	@Override
-	public void removeArticle(int articleNo) throws DataAccessException {
-		freeBoardDAO.deleteArticle(articleNo);
-		
+		int end = num * pageLetter;
+		int start = end + 1 - pageLetter;
+
+		List<FreeArticleDTO> boardList = freeBoardDAO.selectAllArticles(start - 1); // MyBatis는 0-based index를 사용하므로 start - 1
+
+		model.addAttribute("repeat", repeat);
+		model.addAttribute("boardList", boardList);
+		model.addAttribute("num", num);
 	}
 
 }

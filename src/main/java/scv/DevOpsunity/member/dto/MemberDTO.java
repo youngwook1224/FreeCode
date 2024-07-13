@@ -13,6 +13,7 @@ public class MemberDTO {
 	private String name;
 	private int phoneNum;
 	private String email;
+	private int regNum;
 	private Date joinDate;
 
 	public MemberDTO() {
@@ -65,6 +66,14 @@ public class MemberDTO {
 
 	public void setJoinDate(Date joinDate) {
 		this.joinDate = joinDate;
+	}
+
+	public int getRegNum() {
+		return regNum;
+	}
+
+	public void setRegNum(int regNum) {
+		this.regNum = regNum;
 	}
 
 }

@@ -27,5 +27,4 @@ public interface FreeBoardController {
 	public ModelAndView modArticle(MultipartHttpServletRequest multipartRequest , HttpServletResponse response) throws Exception;
 
 	public ModelAndView removeArticle(@RequestParam("freeArticleNo") int freeArticleNo, HttpServletRequest request , HttpServletResponse response) throws Exception;
-
 }

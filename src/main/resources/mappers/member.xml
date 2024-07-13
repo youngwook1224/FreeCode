@@ -11,16 +11,7 @@
 		<result property="email" column="email"/>
 		<result property="joinDate" column="joinDate"/>
  	</resultMap>
-<!-- 
- 	<resultMap type="java.util.HashMap" id="memResult">
- 		<result property="id" column="id"/>
- 		<result property="pw" column="pw"/>
- 		<result property="name" column="name"/>
- 		<result property="phoneNum" column="phoneNum"/>
- 		<result property="email" column="email"/>
-		<result property="joinDate" column="joinDate"/>
- 	</resultMap>
- -->
+
  	<!-- SQL문 중복 제거하기 -->
  	<sql id="sr">
  		<![CDATA[
