@@ -24,7 +24,7 @@ import java.util.*;
 
 @Controller("freeBoardController")
 public class FreeBoardControllerImpl implements FreeBoardController {
-	private static String ARTICLE_IMG_REPO="C:\\kimchangmin\\fileUpload";
+	private static String ARTICLE_IMG_REPO="C:\\kyj\\fileUpload";
 	
 	@Autowired
 	private FreeBoardService boardService;
