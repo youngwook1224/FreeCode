@@ -17,15 +17,14 @@ public interface FreeBoardController {
 			@RequestParam("pageNum") String _pageNum,
 			HttpServletRequest request,
 			HttpServletResponse response) throws Exception;
-	
-	public ModelAndView articleForm(HttpServletRequest request , HttpServletResponse response) throws Exception;
-	
-	public ModelAndView addArticle(MultipartHttpServletRequest multipartRequest , HttpServletResponse response) throws Exception;	// 이미지 등 파일 업로드는은 멀티 파트 처리가 되야 함
-	
-	public ModelAndView viewArticle(@RequestParam("freeArticleNo") int freeArticleNo, HttpServletRequest request , HttpServletResponse response) throws Exception;
-	
-	public ModelAndView modArticle(MultipartHttpServletRequest multipartRequest , HttpServletResponse response) throws Exception;
-	
-	public ModelAndView removeArticle(@RequestParam("freeArticleNo") int freeArticleNo, HttpServletRequest request , HttpServletResponse response) throws Exception;
 
+	public ModelAndView articleForm(HttpServletRequest request , HttpServletResponse response) throws Exception;
+
+	public ModelAndView addArticle(MultipartHttpServletRequest multipartRequest , HttpServletResponse response) throws Exception;	// 이미지 등 파일 업로드는은 멀티 파트 처리가 되야 함
+
+	public ModelAndView viewArticle(@RequestParam("freeArticleNo") int freeArticleNo, HttpServletRequest request , HttpServletResponse response) throws Exception;
+
+	public ModelAndView modArticle(MultipartHttpServletRequest multipartRequest , HttpServletResponse response) throws Exception;
+
+	public ModelAndView removeArticle(@RequestParam("freeArticleNo") int freeArticleNo, HttpServletRequest request , HttpServletResponse response) throws Exception;
 }

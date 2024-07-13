@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import scv.DevOpsunity.comment.dto.CommentDTO;
+import scv.DevOpsunity.comment.service.CommentService;
 import scv.DevOpsunity.free_board.dto.FreeArticleDTO;
 import scv.DevOpsunity.free_board.dto.SearchForm;
 import scv.DevOpsunity.free_board.service.FreeBoardService;
@@ -24,14 +26,19 @@ import java.util.*;
 
 @Controller("freeBoardController")
 public class FreeBoardControllerImpl implements FreeBoardController {
+
+	private static String ARTICLE_IMG_REPO="C:\\kimchangmin\\fileUpload";
 	private static String ARTICLE_IMG_REPO="C:\\kyj\\fileUpload";
-	
 	@Autowired
 	private FreeBoardService boardService;
-	
+
 	@Autowired
 	private FreeArticleDTO articleDTO;
 
+
+	//댓글전용 자동주입
+	@Autowired
+	private CommentService commentService;
 
 	@Override
 	@GetMapping("/board/freeListArticles.do")
@@ -54,7 +61,7 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 
 		return mav;
 	}
-
+	//글쓰기에 여러 개의 이미지 추가
 		@Override
 		@GetMapping("/board/freeArticleForm.do")
 		public ModelAndView articleForm(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -82,6 +89,19 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 			String freeTitle = (String) articleMap.get("freeTitle");
 			String freeContent = (String) articleMap.get("freeContent");
 
+					Files.createDirectories(destDir);  // 대상 디렉토리가 없을 경우 생성
+					Files.move(srcFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
+				}
+			}
+		}catch (Exception e) {
+			//글쓰기 수행 중 오류
+			if(imageFileList != null && imageFileList.size() != 0) {
+				for(ImageDTO imageDTO : imageFileList) {
+					imageFileName=imageDTO.getImageFileName();
+					File srcFile=new File(ARTICLE_IMG_REPO + "\\temp\\" + imageFileName);
+					//오류 발생 시 temp폴더의 이미지를 모두 삭제
+					srcFile.delete();
+				}
 			if (freeTitle == null || freeTitle.trim().isEmpty()) {
 				ModelAndView mav = new ModelAndView("/free_board/freeArticleForm");
 				mav.addObject("errorMessage", "제목은 비워둘 수 없습니다.");
@@ -104,7 +124,6 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 				FileUtils.moveFileToDirectory(srcFile, destDir, true);
 				System.out.println("File moved to: " + new File(destDir, freeImageFileName).getAbsolutePath());
 				System.out.println("File exists after move: " + new File(destDir, freeImageFileName).exists());
-
 			}
 			ModelAndView mav = new ModelAndView("redirect:/board/freeListArticles.do");
 			return mav;
@@ -122,8 +141,17 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 			throws Exception {
 		articleDTO=boardService.viewArticle(freeArticleNo);
 		ModelAndView mav=new ModelAndView();
+
+		mav.setViewName("/free_board/freeViewArticle_multi");
+		mav.addObject("articleMap",articleMap);
+
+		//댓글 보기
+		List<CommentDTO> commentList = commentService.readReply(articleDTO.getArticleNo());
+		model.addAttribute("commentList",commentList);	// 임플리먼츠 매개변수에 Model model 추가해야함
+
 		mav.setViewName("/free_board/freeViewArticle");
 		mav.addObject("article",articleDTO);
+
 		return mav;
 	}
 
@@ -140,6 +168,61 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 			String value=multipartRequest.getParameter(name);
 			articleMap.put(name, value);
 		}
+
+		List<String> fileList=multiFileUpload(multipartRequest);
+		String articleNo=(String)articleMap.get("articleNo");
+		List<ImageDTO> imageFileList=new ArrayList<ImageDTO>();
+		int modityNumber=0;
+		if(fileList != null && fileList.size() != 0) {
+			for(String fileName : fileList) {
+				modityNumber++;
+				ImageDTO imageDTO=new ImageDTO();
+				System.out.println("이미지 이름 : " + fileName);
+				imageDTO.setImageFileName(fileName);
+				imageDTO.setImageFileNo(Integer.parseInt((String)articleMap.get("imageFileNo"+modityNumber)));
+				imageFileList.add(imageDTO);
+			}
+			articleMap.put("imageFileList", imageFileList);
+		}
+		HttpSession session = multipartRequest.getSession();
+		MemberDTO memberDTO = (MemberDTO)session.getAttribute("member");
+		String id = memberDTO.getId();
+		articleMap.put("id",id);
+		try {
+			boardService.modArticle(articleMap);
+			if(imageFileList != null && imageFileList.size() != 0) {
+				//int cnt=imageFileList.size()-1;
+				int cnt=0;
+				for(ImageDTO imageDTO : imageFileList) {
+					cnt++;
+					imageFileName=imageDTO.getImageFileName();
+					if(imageFileName != null && imageFileName != "") {
+						File srcFile=new File(ARTICLE_IMG_REPO + "\\temp\\" + imageFileName);
+						File destDir=new File(ARTICLE_IMG_REPO + "\\" + articleNo);
+						// FileUtils.moveFileToDirectory(srcFile, destDir, true);
+						Path source = srcFile.toPath();
+						Path target = destDir.toPath().resolve(source.getFileName());
+						Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+						String originalFileName=(String)articleMap.get("originalFileName" + cnt);
+						System.out.println("이전 이미지 : " + originalFileName);
+						File oldFile=new File(ARTICLE_IMG_REPO + "\\" + articleNo + "\\" + originalFileName);
+						oldFile.delete();
+					}
+
+				}
+			}
+		}catch (Exception e) {
+			//글쓰기 수행 중 오류
+			/*if(imageFileList != null && imageFileList.size() != 0) {
+				for(ImageDTO imageDTO : imageFileList) {
+					imageFileName=imageDTO.getImageFileName();
+					File srcFile=new File(ARTICLE_IMG_REPO + "\\temp\\" + imageFileName);
+					//오류 발생 시 temp폴더의 이미지를 모두 삭제
+					srcFile.delete();
+				}
+			}*/
+			e.printStackTrace();
+
 		String freeImageFileName=fileUpload(multipartRequest);
 		String freeTitle=(String)articleMap.get("freeTitle");
 		String freeContent=(String)articleMap.get("freeContent");
@@ -161,11 +244,12 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 			String originalFileName=(String)articleMap.get("originalFileName");
 			File oldFile=new File(ARTICLE_IMG_REPO + "\\" + freeArticleNo + "\\" + originalFileName);
 			oldFile.delete();
+
 		}
 		ModelAndView mav= new ModelAndView("redirect:/board/freeViewArticle.do?freeArticleNo=" + freeArticleNo);
 		return mav;
 	}
-	
+
 	@Override
 	@PostMapping("/board/freeRemoveArticle.do")
 	public ModelAndView removeArticle(@RequestParam("freeArticleNo") int freeArticleNo, HttpServletRequest request, HttpServletResponse response)
@@ -178,7 +262,7 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 		ModelAndView mav= new ModelAndView("redirect:/board/freeListArticles.do");
 		return mav;
 	}
-	
+
 	//한 개 이미지 파일 업로드
 	private String fileUpload(MultipartHttpServletRequest multipartRequest) throws Exception {
 		String freeImageFileName=null;
@@ -194,11 +278,37 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 						file.createNewFile();
 					}
 				}
+
+				mFile.transferTo(new File(ARTICLE_IMG_REPO + "\\temp\\" + imageFileName));
+			}
 				mFile.transferTo(new File(ARTICLE_IMG_REPO + "\\temp\\" + freeImageFileName));
 			}			
 		}
 		return freeImageFileName;
 	}
+
+	//여러개의 이미지 파일 업로드
+	private List<String> multiFileUpload(MultipartHttpServletRequest multipartRequest) throws Exception {
+		List<String> fileList=new ArrayList<String>();
+		Iterator<String> fileNames=multipartRequest.getFileNames();
+		while(fileNames.hasNext()) {
+			String fileName=fileNames.next();
+			MultipartFile mFile=multipartRequest.getFile(fileName);
+			String originalFileName=mFile.getOriginalFilename();
+			fileList.add(originalFileName);
+			File file=new File(ARTICLE_IMG_REPO+"\\"+ fileName);
+			if(mFile.getSize() != 0) {
+				if(! file.exists()) {
+					if(file.getParentFile().mkdir()) {
+						file.createNewFile();
+					}
+				}
+				mFile.transferTo(new File(ARTICLE_IMG_REPO + "\\temp\\" + originalFileName));
+			}
+		}
+		return fileList;
+	}
+
 
 	@GetMapping("/board/freeReview.do")
 	public String review(Model model,
@@ -232,8 +342,6 @@ public class FreeBoardControllerImpl implements FreeBoardController {
 
 		return "/free_board/freeListArticles";
 	}//method 종료
-
-
 }
 
 
