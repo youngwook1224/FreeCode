@@ -29,7 +29,7 @@ public class MailServiceImpl implements MailService {
 
             MimeMessage message = sender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            helper.setFrom("edward3784@gmail.com", "발신자 이름");
+            helper.setFrom("edward3784@gmail.com", "DevOpsUnity");
             helper.setTo(email);
             helper.setSubject(title);
             helper.setText(body, true);
