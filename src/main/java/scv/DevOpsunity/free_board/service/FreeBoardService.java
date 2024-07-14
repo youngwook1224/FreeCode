@@ -20,7 +20,8 @@ public interface FreeBoardService {
 	
 	public void removeArticle(int articleNo) throws DataAccessException;
 
-	// 검색 기능
-	void selectSearch(Model model, String type, String keyword, int num) throws Exception;
-	void boardList(Model model, int num) throws Exception;
+	public void selectSearch(Model model, String type, String keyword, int num) throws Exception;
+
+	public void boardList(Model model, int num) throws Exception;
+	
 }
