@@ -3,7 +3,7 @@
 <ul id="sidebar_left" th:fragment="sidebar">
 	<li><a th:href="@{/board/freeListArticles.do}">자유게시판</a></li>
 	<li><a th:href="@{/shopInfo.do}">매장안내</a></li>
-	<li>고객센터</li>
+	<li><a th:href="@{/reservations}">예약</a></li>
 	<li th:if="${session.member != null and session.member.id == 'ADMIN'}">
 		<a th:href="@{/member/listMembers.do}">회원관리</a>
 	</li>
