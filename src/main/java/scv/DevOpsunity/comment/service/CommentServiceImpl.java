@@ -8,7 +8,7 @@ import scv.DevOpsunity.comment.dto.CommentDTO;
 
 import java.util.List;
 
-@Service("")
+@Service("CommentService")
 public class CommentServiceImpl implements CommentService{
 
     @Autowired

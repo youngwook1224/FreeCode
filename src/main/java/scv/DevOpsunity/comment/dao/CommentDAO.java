@@ -1,11 +1,13 @@
 package scv.DevOpsunity.comment.dao;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import scv.DevOpsunity.comment.dto.CommentDTO;
 
 import java.util.List;
 
-@Repository("")
+@Mapper
+@Repository("CommentDAO")
 public interface CommentDAO {
     
     //댓글조회

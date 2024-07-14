@@ -9,7 +9,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import scv.DevOpsunity.comment.dto.CommentDTO;
 import scv.DevOpsunity.comment.service.CommentService;
 
-@Controller
+@Controller("CommentController")
 @RequestMapping("/comment")
 public class CommentControllerImpl implements CommentController{
 

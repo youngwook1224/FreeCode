@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import java.sql.Date;
 
 
-@Component("")
+@Component("CommentDTO")
 public class CommentDTO {
 
     private int bno;
@@ -13,6 +13,16 @@ public class CommentDTO {
     private String content;
     private String writer;
     private Date regdate;
+
+    public CommentDTO() {}
+
+    public CommentDTO ( int bno, int rno, String content, String writer, Date regdate){
+        this.bno = bno;
+        this.rno = rno;
+        this.content = content;
+        this.writer = writer;
+        this.regdate = regdate;
+    }
 
     public int getBno() {
         return bno;

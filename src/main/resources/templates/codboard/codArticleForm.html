@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="/layout/layout">
+<head>
+<meta charset="UTF-8">
+<title>글 쓰기 창</title>
+	<style>
+		body {
+			background-color: #212529;
+			color: #f8f9fa;
+		}
+		.card {
+			background-color: #343a40;
+		}
+		.card-title, .card-text {
+			color: #f8f9fa;
+		}
+		.blockquote {
+			color: #f8f9fa;
+		}
+		header {
+			padding: 1rem 0;
+		}
+		nav {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+		nav a {
+			color: #f8f9fa;
+			margin-right: 1rem;
+		}
+		.nav-right {
+			display: flex;
+			align-items: center;
+		}
+		.nav-right input[type="search"] {
+			margin-right: 1rem;
+			padding: 0.5rem;
+		}
+		.sign-up {
+			background-color: #007bff;
+			color: #f8f9fa;
+			border: none;
+			padding: 0.5rem 1rem;
+			cursor: pointer;
+		}
+		.menu {
+			display: flex;
+			flex-wrap: wrap;
+			margin: 1rem 0;
+		}
+		.menu a {
+			color: #f8f9fa;
+			margin-right: 1rem;
+			padding: 0.5rem 0;
+		}
+		.menu li{
+			list-style-type: none;
+			display: inline-block;
+		}
+		.featured-post {
+			margin-bottom: 2rem;
+		}
+		.post-previews {
+			display: flex;
+			justify-content: space-between;
+		}
+		.post-preview {
+			background-color: #343a40;
+			padding: 1rem;
+			margin-right: 1rem;
+			flex: 1;
+		}
+	</style>
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+
+	//글 목록 페이지 이동 메서드 (버튼 인풋태그에 onclick하여 연결)
+	function backToList(obj) {
+		obj.method= "get";
+		obj.action = "/codboard/codListArticles.do";
+		obj.submit();
+	}
+	
+</script>
+</head>
+<body>
+	<!-- 글 쓰기 구현  -->
+	
+	<th:block layout:fragment="content">
+	<h2 align="center">새 글쓰기</h2>
+	<form action="/codboard/codAddArticle.do" method="post" enctype="multipart/form-data">
+		<table align="center">
+			<tr>
+				<td align="right"> 작성자 : </td>
+				<td colspan="2"> <input type="text" size="50" th:value="${session.member.name}" readonly> </td>
+			</tr>
+			<tr>
+				<td align="right"> 테스트 제목 : </td>
+				<td colspan="2"><input type="text" size="50" name="title"></td>
+			</tr>
+			<tr>
+				<td align="right"> 내용 : </td>
+				<td colspan="2"><textarea rows="10" cols="50" name="content" maxlength="4000"></textarea></td>
+			</tr>
+			<tr>
+				<td align="right"> 정답 : </td>
+				<td colspan="2"><textarea rows="10" cols="50" name="result" maxlength="4000"></textarea></td>
+			</tr>
+			<tr>
+				<td align="right">&nbsp;</td>
+				<td colspan="2">
+					<input type="submit" value="글쓰기">
+					<input type="button" value="목록보기" onclick = "backToList(this.form)">
+				</td>
+			</tr>
+		</table>
+	</form>
+	</th:block>
+</body>
+</html>
