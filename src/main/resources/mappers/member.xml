@@ -40,6 +40,7 @@
  			insert into member_tbl values(#{id},#{pw},#{name},#{phoneNum},#{email},sysdate())
  		]]>
  	</insert>
+	 
 
 	<!--회원정보수정-->
  	<update id="updateMember" parameterType="memberDTO">
