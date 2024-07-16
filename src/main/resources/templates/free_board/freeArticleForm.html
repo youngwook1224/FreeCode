@@ -15,6 +15,7 @@
                  console.log(event);
                  $('#preview').attr('src',event.target.result);
               }
+		   
               reader.readAsDataURL(input.files[0]);
            }else{
               $('#preview').attr('src','#');
