@@ -21,7 +21,7 @@
 	</select>
 
 	<select id="getNewArticleNo" resultType="int">
-		select max(freeArticleNo)+1 from board_tbl
+		select IFNULL(max(freeArticleNo),0)+1 from board_tbl
 	</select>
 
 	<insert id="insertNewArticle" parameterType="FreeArticleDTO">
