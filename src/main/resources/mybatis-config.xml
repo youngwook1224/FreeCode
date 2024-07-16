@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration
 
-		PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-		"https://mybatis.org/dtd/mybatis-3-config.dtd">
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-config.dtd">
 
 <configuration>
-	<mappers>
-		<mapper resource="mappers/freeBoard.xml" />
-		<mapper resource="mappers/member.xml" />
-	</mappers>
+    <mappers>
+        <mapper resource="mappers/freeBoard.xml" />
+        <mapper resource="mappers/member.xml" />
+        <mapper resource="mappers/codBoard.xml" />
+        <mapper resource="mappers/reply.xml" />
+        <mapper resource="mappers/res.xml" />
+    </mappers>
 </configuration>

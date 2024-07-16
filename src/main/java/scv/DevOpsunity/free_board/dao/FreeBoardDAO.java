@@ -15,21 +15,22 @@ import java.util.Map;
 @Repository("freeBoardDAO")
 public interface FreeBoardDAO {
 
-	public List selectAllArticles(@Param("count") int count) throws DataAccessException;
+    public List selectAllArticles(@Param("count") int count) throws DataAccessException;
 
-	public int selectToArticles() throws DataAccessException;
+    public int selectToArticles() throws DataAccessException;
 
-	public int getNewArticleNo() throws DataAccessException;
+    public int getNewArticleNo() throws DataAccessException;
 
-	public void insertNewArticle(FreeArticleDTO freeArticleDTO) throws DataAccessException;
+    public void insertNewArticle(FreeArticleDTO freeArticleDTO) throws DataAccessException;
 
-	public FreeArticleDTO selectArticle(int freeArticleNo) throws DataAccessException;
+    public FreeArticleDTO selectArticle(int freeArticleNo) throws DataAccessException;
 
-	public void updateArticle(FreeArticleDTO freeArticleDTO) throws DataAccessException;
+    public void updateArticle(FreeArticleDTO freeArticleDTO) throws DataAccessException;
 
-	public void deleteArticle(int freeArticleNo) throws DataAccessException;
+    public void deleteArticle(int freeArticleNo) throws DataAccessException;
 
-	public ArrayList<FreeArticleDTO> selectSearch(@Param("type") String type, @Param("keyword") String keyword, @Param("s") int start, @Param("e") int end) throws Exception;
+    public ArrayList<FreeArticleDTO> selectSearch(@Param("type")String type, @Param("keyword")String keyword, @Param("s") int start, @Param("e") int end)throws Exception;
 
-	public int selectSearchCount(@Param("type") String type, @Param("keyword") String keyword);
+    public int selectSearchCount(@Param("type")String type,@Param("keyword")String keyword);
+
 }

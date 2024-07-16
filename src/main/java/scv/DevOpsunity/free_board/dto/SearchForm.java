@@ -4,10 +4,6 @@ public class SearchForm {
     private String type;
     private String keyword;
 
-    // 기본 생성자
-    public SearchForm() {
-    }
-
     // getters and setters
     public String getType() {
         return type;

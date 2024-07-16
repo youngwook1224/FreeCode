@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  layout:decorate="~{layout/layout}">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
 <head>
-	<meta charset="UTF-8">
-	<title>글 상세 보기 페이지</title>
-	<style type="text/css">
-		#tr_button_modify{
+    <meta charset="UTF-8">
+    <title>글 상세 보기 페이지</title>
+    <style type="text/css">
+        #tr_button_modify{
             display: none;
         }
-	</style>
-	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
-	<script>
-		   function readImage(input){
+    </style>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+        function readImage(input){
             if(input.files && input.files[0]){
                 let reader = new FileReader();
                 reader.onload = function(event){
@@ -68,64 +68,64 @@
             obj.action = "/board/freeListArticles.do";
             obj.submit();
         }
-	</script>
+    </script>
 </head>
 <body>
 <th:block layout:fragment="content">
-	<form name="frmArticle" action="" method="post" enctype="multipart/form-data">
-		<table align="center">
-			<tr>
-				<td width="150" align="center" bgcolor="#ff9933">글번호</td>
-				<td> <input type="text" th:value="${article.freeArticleNo}" disabled>
-					<input type="hidden" name="freeArticleNo" th:value="${article.freeArticleNo}"></td>
-			</tr>
-			<tr>
-				<td width="150" align="center" bgcolor="#ff9933">작성자 아이디</td>
-				<td> <input type="text" th:value="${article.id}" disabled> </td>
-			</tr>
-			<tr>
-				<td width="150" align="center" bgcolor="#ff9933">제목</td>
-				<td> <input type="text" id="id_title" name="title" th:value="${article.freeTitle}" disabled> </td>
-			</tr>
-			<tr>
-				<td width="150" align="center" bgcolor="#ff9933">내용</td>
-				<td> <textarea rows="10" cols="50" id="id_content" name="freeContent" th:text="${article.freeContent}" disabled></textarea> </td>	<!-- textarea태그는 input태그와 달리 value가 아닌 태그 사이에 값을 넣음 -->
-			</tr>
-			<tr th:if="${not #strings.isEmpty(article.freeImageFileName)}">
-				<td width="150" align="center" bgcolor="ff9933" rowspan="2">이미지</td>
-				<td>
-					<input type="hidden" name="originalFileName" th:value="${article.freeImageFileName}">
-					<img id="preview" th:src="@{/down.do(freeArticleNo=${article.freeArticleNo},freeImageFileName=${article.freeImageFileName})}" width="200">
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="file" id="id_imgFile" name="imageFileName" onchange="readImage(this)" disabled>
-				</td>
-			</tr>
-			<tr th:if="${not #strings.isEmpty(article.freeImageFileName)}">
-				<td width="150" align="center" bgcolor="ff9933">등록일자</td>
-				<td> <input type="text" th:value="${article.freeWriteDate}" disabled> </td>
-			</tr>
-			<!-- 수정 버튼 누를시 나타나는 버튼 -->
-			<tr id="tr_button_modify">
-				<td  align="center" colspan="2">
-					<input type="button" value="수정반영" onclick="fn_free_modify_article(this.form)">
-					<input type="button" value="수정취소" onclick="free_toList(this.form)">
-				</td>
-			</tr>
-			<!-- 글 상세보기 페이지 하단에 나오게 되는 버튼 -->
-			<tr id="tr_button">
-				<td align="center" colspan="2">
+    <form name="frmArticle" action="" method="post" enctype="multipart/form-data">
+        <table align="center">
+            <tr>
+                <td width="150" align="center" bgcolor="#ff9933">글번호</td>
+                <td> <input type="text" th:value="${article.freeArticleNo}" disabled>
+                    <input type="hidden" name="freeArticleNo" th:value="${article.freeArticleNo}"></td>
+            </tr>
+            <tr>
+                <td width="150" align="center" bgcolor="#ff9933">작성자 아이디</td>
+                <td> <input type="text" th:value="${article.id}" disabled> </td>
+            </tr>
+            <tr>
+                <td width="150" align="center" bgcolor="#ff9933">제목</td>
+                <td> <input type="text" id="id_title" name="title" th:value="${article.freeTitle}" disabled> </td>
+            </tr>
+            <tr>
+                <td width="150" align="center" bgcolor="#ff9933">내용</td>
+                <td> <textarea rows="10" cols="50" id="id_content" name="freeContent" th:text="${article.freeContent}" disabled></textarea> </td>	<!-- textarea태그는 input태그와 달리 value가 아닌 태그 사이에 값을 넣음 -->
+            </tr>
+            <tr th:if="${not #strings.isEmpty(article.freeImageFileName)}">
+                <td width="150" align="center" bgcolor="ff9933" rowspan="2">이미지</td>
+                <td>
+                    <input type="hidden" name="originalFileName" th:value="${article.freeImageFileName}">
+                    <img id="preview" th:src="@{/down.do(freeArticleNo=${article.freeArticleNo},freeImageFileName=${article.freeImageFileName})}" width="200">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="file" id="id_imgFile" name="imageFileName" onchange="readImage(this)" disabled>
+                </td>
+            </tr>
+            <tr th:if="${not #strings.isEmpty(article.freeImageFileName)}">
+                <td width="150" align="center" bgcolor="ff9933">등록일자</td>
+                <td> <input type="text" th:value="${article.freeWriteDate}" disabled> </td>
+            </tr>
+            <!-- 수정 버튼 누를시 나타나는 버튼 -->
+            <tr id="tr_button_modify">
+                <td  align="center" colspan="2">
+                    <input type="button" value="수정반영" onclick="fn_free_modify_article(this.form)">
+                    <input type="button" value="수정취소" onclick="free_toList(this.form)">
+                </td>
+            </tr>
+            <!-- 글 상세보기 페이지 하단에 나오게 되는 버튼 -->
+            <tr id="tr_button">
+                <td align="center" colspan="2">
 						<span th:if="${article.id == session.member.id}">
 							<input type="button" value="수정하기" onclick="fn_free_enable(this.form)">
 							<input type="button" value="삭제하기" th:onclick="|fn_free_remove_article('/board/freeRemoveArticle.do',${article.freeArticleNo})|">
 						</span>
-					<input type="button" value="리스트로 돌아가기" onclick="free_backToList(this.form)">
-				</td>
-			</tr>
-		</table>
-	</form>
+                    <input type="button" value="리스트로 돌아가기" onclick="free_backToList(this.form)">
+                </td>
+            </tr>
+        </table>
+    </form>
 </th:block>
 </body>
 </html>
