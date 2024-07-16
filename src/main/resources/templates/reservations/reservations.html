@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layout/layout">
+<head>
+    <title>Cafe Reservation</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css" rel="stylesheet">
+    <style>
+        .time-slot {
+            margin-bottom: 10px;
+        }
+        .reserved {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div id="calendar"></div>
+    <div id="reservation-form" style="display: none;">
+        <h2>Reservations for <span id="selected-date"></span></h2>
+        <div id="time-slots"></div>
+    </div>
+    <div id="reservation-details" style="display: none;">
+        <h3>Make a Reservation</h3>
+        <form id="make-reservation-form">
+            <input type="hidden" id="reservation-time" name="reservationTime">
+            <input type="hidden" id="seat-number" name="seatNumber">
+            <label for="member-name">Your Name:</label>
+            <input type="text" id="member-name" name="memberName" required>
+            <button type="submit">Confirm Reservation</button>
+        </form>
+    </div>
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                selectable: true,
+                select: function(info) {
+                    loadAvailableSlots(info.start);
+                }
+            });
+            calendar.render();
+        });
+
+        function loadAvailableSlots(date) {
+            console.log("Loading available slots for date:", date);
+            $.getJSON('/api/available-slots', { date: date.toISOString().split('T')[0] }, function(data) {
+                console.log("Received data:", data);
+                var timeSlotsDiv = $('#time-slots');
+                timeSlotsDiv.empty();
+                data.forEach(function(slot) {
+                    var slotDiv = $('<div class="time-slot">');
+                    var timeStr = new Date(slot.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    slotDiv.append('<span>' + timeStr + '</span>');
+
+                    var reserveBtn = $('<button>').text('예약하기').click(function() {
+                        showReservationForm(slot.time, slot.availableSeats[0]);
+                    });
+                    slotDiv.append(reserveBtn);
+
+                    var cancelBtn = $('<button>').text('취소').click(function() {
+                        cancelReservation(slot.time);
+                    });
+                    slotDiv.append(cancelBtn);
+
+                    timeSlotsDiv.append(slotDiv);
+                });
+                $('#selected-date').text(date.toDateString());
+                $('#reservation-form').show();
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.error("Error fetching available slots:", textStatus, errorThrown);
+            });
+        }
+
+        function showReservationForm(time, seatNumber) {
+            $('#reservation-time').val(time);
+            $('#seat-number').val(seatNumber);
+            $('#reservation-details').show();
+        }
+
+        $('#make-reservation-form').submit(function(e) {
+            e.preventDefault();
+            var reservationData = {
+                memberId: $('#member-name').val(),
+                seatNumber: $('#seat-number').val(),
+                reservationTime: $('#reservation-time').val()
+            };
+            makeReservation(reservationData);
+        });
+
+        function makeReservation(reservationData) {
+            $.ajax({
+                url: '/api/make-reservation',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(reservationData),
+                success: function(response) {
+                    alert('Reservation successful!');
+                    $('#reservation-details').hide();
+                    loadAvailableSlots(new Date(reservationData.reservationTime));
+                },
+                error: function(xhr) {
+                    alert('Reservation failed: ' + xhr.responseText);
+                }
+            });
+        }
+
+        function cancelReservation(time) {
+            if (confirm('Are you sure you want to cancel this reservation?')) {
+                $.ajax({
+                    url: '/api/cancel-reservation',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ reservationTime: time }),
+                    success: function(response) {
+                        alert('Reservation cancelled successfully!');
+                        loadAvailableSlots(new Date(time));
+                    },
+                    error: function(xhr) {
+                        alert('Cancellation failed: ' + xhr.responseText);
+                    }
+                });
+            }
+        }
+    </script>
+</th:block>
+</body>
+</html>

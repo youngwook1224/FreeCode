@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="scv.DevOpsunity.reservations.dao.ReservationDAO">
+
+    <insert id="createReservation" parameterType="scv.DevOpsunity.reservations.dto.ReservationDTO">
+        INSERT INTO reservations (member_id, seat_number, reservation_time, end_time)
+        VALUES (#{memberId}, #{seatNumber}, #{reservationTime}, #{endTime})
+    </insert>
+
+    <select id="getReservationById" resultType="scv.DevOpsunity.reservations.dto.ReservationDTO">
+        <![CDATA[
+        SELECT * FROM reservations WHERE id = #{id}
+        ]]>
+    </select>
+
+    <select id="getReservationsBySeatAndTimeRange" resultType="scv.DevOpsunity.reservations.dto.ReservationDTO">
+        <![CDATA[
+        SELECT * FROM reservations
+        WHERE seat_number = #{seatNumber}
+        AND reservation_time >= #{startTime}
+        AND reservation_time < #{endTime}
+        ]]>
+    </select>
+
+    <select id="getReservationsForDateRange" resultType="scv.DevOpsunity.reservations.dto.ReservationDTO">
+        <![CDATA[
+        SELECT * FROM reservations
+        WHERE reservation_time >= #{startTime} AND reservation_time < #{endTime}
+        ]]>
+    </select>
+
+    <delete id="deleteReservation">
+        <![CDATA[
+        DELETE FROM reservations WHERE id = #{id}
+        ]]>
+    </delete>
+
+    <select id="getOccupiedSeatsAtTime" resultType="java.lang.Integer">
+        <![CDATA[
+        SELECT DISTINCT seat_number
+        FROM reservations
+        WHERE reservation_time <= #{dateTime}
+        AND end_time > #{dateTime}
+        ]]>
+    </select>
+
+</mapper>
